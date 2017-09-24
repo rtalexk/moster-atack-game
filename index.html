@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+    
+    <div id="app">
+        <section class="players">
+            <section v-for="player in players" :key="player.id" class="player">
+                <h1 class="name">{{ player.name }}</h1>
+                <div class="health">
+                    <div class="currentHealth"></div>
+                    <span class="healthCounter">{{ player.health }}</span>
+                </div>
+            </section>
+        </section>
+
+        <section class="controls">
+            <template v-if="!isGameStarted">
+                <a class="btn">Start game</a>
+            </template>
+            <template v-else>
+                <a class="btn atack">Atack</a>
+                <a class="btn special">Special</a>
+                <a class="btn health">Heal</a>
+                <a class="btn giveup">Give Up</a>
+            </template>
+        </section>
+
+        <section class="history">
+            <template v-for="item in history">
+                <div :class="['historyItem', { you: item.player === 'you', monster: item.target === 'you' }]">
+                    {{ item.player }} hits {{ item.target }} for {{ item.damage }}
+                </div>
+            </template>
+        </section>
+    </div>
+
+    <script src="https://npmcdn.com/vue/dist/vue.js"></script>
+    <script src="./main.js"></script>
+</body>
+</html>
