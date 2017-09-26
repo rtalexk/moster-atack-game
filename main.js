@@ -2,8 +2,8 @@ new Vue({
     el: '#app',
     data: {
         players: [
-            { id: 1, name: 'you', health: 10 },
-            { id: 2, name: 'monster', health: 10 }
+            { id: 1, name: 'you', health: 1 },
+            { id: 2, name: 'monster', health: 1 }
         ],
         isGameStarted: false,
         history: []
