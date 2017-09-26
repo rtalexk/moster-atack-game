@@ -6,12 +6,7 @@ new Vue({
             { id: 2, name: 'monster', health: 10 }
         ],
         isGameStarted: false,
-        history: [
-            { player: 'you', target: 'monster', damage: 10 },
-            { player: 'monster', target: 'you', damage: 10 },
-            { player: 'you', target: 'monster', damage: 10 },
-            { player: 'monster', target: 'you', damage: 10 },
-        ]
+        history: []
     },
     computed: {
         finalResult: function() {
@@ -52,9 +47,14 @@ new Vue({
         special: function () {
             return this.random(11, 20);
         },
+        buildHistoryItem: function(action, amount, player, target) {
+            return { action, amount, player, target };
+        },
         doAction: function (action) {
             let damage;
             let life;
+
+            let historyItem;
 
             switch (action) {
                 case 'heal':
@@ -63,16 +63,20 @@ new Vue({
                     if (this.players[0].health > 100) {
                         this.players[0].health = 100;
                     }
+                    historyItem = this.buildHistoryItem('heal', life, 'you', null);
                     break;
                 case 'atack':
                     damage = this.atack();
                     this.players[1].health -= damage;
+                    historyItem = this.buildHistoryItem('atack', damage, 'you', 'monster')
                     break;
                 case 'special':
                     damage = this.special();
                     this.players[1].health -= damage;
+                    historyItem = this.buildHistoryItem('atack', damage, 'you', 'monster')
                     break;
             }
+            this.history.splice(0, 0, historyItem);
 
             const randomEnemyAction = Math.random();
 
@@ -82,13 +86,17 @@ new Vue({
                 if (this.players[1].health > 100) {
                     this.players[1].health = 100;
                 }
+                historyItem = this.buildHistoryItem('heal', life, 'monster', null);
             } else if (randomEnemyAction < 0.80) {  // enemy will do normal atack
                 damage = this.atack();
                 this.players[0].health -= damage;
+                historyItem = this.buildHistoryItem('atack', damage, 'monster', 'you')
             } else {                                // enemy will do special atack
                 damage = this.special();
                 this.players[0].health -= damage;
+                historyItem = this.buildHistoryItem('atack', damage, 'monster', 'you')
             }
+            this.history.splice(0, 0, historyItem);
         }
 
     }

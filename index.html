@@ -44,8 +44,8 @@
                 </section>
             </template>
             <template v-for="item in history">
-                <div :class="['historyItem', { you: item.player === 'you', monster: item.target === 'you' }]">
-                    {{ item.player }} hits {{ item.target }} for {{ item.damage }}
+                <div :class="['historyItem', { you: item.player === 'you', monster: item.player === 'monster' }]">
+                    {{ item.player }} {{ item.action }} for {{ item.amount }}
                 </div>
             </template>
         </section>
