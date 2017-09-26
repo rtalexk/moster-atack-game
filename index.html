@@ -16,7 +16,10 @@
                 <div class="health">
                     <div 
                         class="currentHealth" 
-                        :style="{ width: (player.health < 0 ? 0 : player.health) + '%' }">
+                        :style="[
+                            { width: (player.health < 0 ? 0 : player.health) + '%' }, 
+                            { backgroundColor: player.health < 20 ? '#F44336' : player.health < 50 ? '#FFC107' : '#4CAF50' }
+                        ]">
                     </div>
                     <span class="healthCounter">{{ player.health }}</span>
                 </div>
