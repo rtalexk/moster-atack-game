@@ -14,7 +14,10 @@
             <section v-for="player in players" :key="player.id" class="player">
                 <h1 class="name">{{ player.name }}</h1>
                 <div class="health">
-                    <div class="currentHealth" :style="{ width: player.health + '%' }"></div>
+                    <div 
+                        class="currentHealth" 
+                        :style="{ width: (player.health < 0 ? 0 : player.health) + '%' }">
+                    </div>
                     <span class="healthCounter">{{ player.health }}</span>
                 </div>
             </section>
