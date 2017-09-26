@@ -9,7 +9,7 @@ new Vue({
         history: []
     },
     computed: {
-        finalResult: function() {
+        finalResult: function () {
             if (this.players[0].health <= 0) {
                 return 'lose';
             }
@@ -47,55 +47,46 @@ new Vue({
         special: function () {
             return this.random(11, 20);
         },
-        buildHistoryItem: function(action, amount, player, target) {
+        buildHistoryItem: function (action, amount, player, target) {
             return { action, amount, player, target };
         },
+        randomEnemyAction: function () {
+            const random = Math.random();
+            if (random < 0.20) { return 'heal'; } 
+            if (random < 0.80) { return 'atack'; }
+            return 'special';
+        },
         doAction: function (action) {
-            let damage;
-            let life;
+            let amount;
 
             let historyItem;
 
-            switch (action) {
-                case 'heal':
-                    life = this.heal();
-                    this.players[0].health += life;
-                    if (this.players[0].health > 100) {
-                        this.players[0].health = 100;
-                    }
-                    historyItem = this.buildHistoryItem('heal', life, 'you', null);
-                    break;
-                case 'atack':
-                    damage = this.atack();
-                    this.players[1].health -= damage;
-                    historyItem = this.buildHistoryItem('atack', damage, 'you', 'monster')
-                    break;
-                case 'special':
-                    damage = this.special();
-                    this.players[1].health -= damage;
-                    historyItem = this.buildHistoryItem('atack', damage, 'you', 'monster')
-                    break;
+            if (action === 'heal') {
+                amount = this.heal();
+                this.players[0].health += amount;
+                if (this.players[0].health > 100) {
+                    this.players[0].health = 100;
+                }
+            } else {
+                amount = action === 'atack' ? this.atack() : this.special();
+                this.players[1].health -= amount;
             }
+            historyItem = this.buildHistoryItem(action, amount, 'you', 'monster')
             this.history.splice(0, 0, historyItem);
 
-            const randomEnemyAction = Math.random();
+            const enemyAction = this.randomEnemyAction();
 
-            if (randomEnemyAction < 0.20) {         // enemy will heal
-                life = this.heal();
-                this.players[1].health += life;
+            if (enemyAction === 'heal') {
+                amount = this.heal();
+                this.players[1].health += amount;
                 if (this.players[1].health > 100) {
                     this.players[1].health = 100;
                 }
-                historyItem = this.buildHistoryItem('heal', life, 'monster', null);
-            } else if (randomEnemyAction < 0.80) {  // enemy will do normal atack
-                damage = this.atack();
-                this.players[0].health -= damage;
-                historyItem = this.buildHistoryItem('atack', damage, 'monster', 'you')
-            } else {                                // enemy will do special atack
-                damage = this.special();
-                this.players[0].health -= damage;
-                historyItem = this.buildHistoryItem('atack', damage, 'monster', 'you')
+            } else {
+                amount = enemyAction === 'atack' ? this.atack() : this.special();
+                this.players[0].health -= amount;
             }
+            historyItem = this.buildHistoryItem('atack', amount, 'monster', 'you')
             this.history.splice(0, 0, historyItem);
         }
 
