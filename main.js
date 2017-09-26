@@ -79,6 +79,8 @@ new Vue({
 
             const enemyAction = this.randomEnemyAction();
 
+            if (this.players[1].health < 0) { return; }
+
             amount = this.action(1, 0, enemyAction);
             historyItem = this.buildHistoryItem(enemyAction, amount, 'monster', 'you')
             this.history.splice(0, 0, historyItem);
