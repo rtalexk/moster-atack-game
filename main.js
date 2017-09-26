@@ -13,6 +13,17 @@ new Vue({
             { player: 'monster', target: 'you', damage: 10 },
         ]
     },
+    computed: {
+        finalResult: function() {
+            if (this.players[0].health <= 0) {
+                return 'lose';
+            }
+            if (this.players[1].health <= 0) {
+                return 'win';
+            }
+            return null;
+        }
+    },
     methods: {
         startGame: function () {
             this.isGameStarted = true;
@@ -49,6 +60,9 @@ new Vue({
                 case 'heal':
                     life = this.heal();
                     this.players[0].health += life;
+                    if (this.players[0].health > 100) {
+                        this.players[0].health = 100;
+                    }
                     break;
                 case 'atack':
                     damage = this.atack();
@@ -65,6 +79,9 @@ new Vue({
             if (randomEnemyAction < 0.20) {         // enemy will heal
                 life = this.heal();
                 this.players[1].health += life;
+                if (this.players[1].health > 100) {
+                    this.players[1].health = 100;
+                }
             } else if (randomEnemyAction < 0.80) {  // enemy will do normal atack
                 damage = this.atack();
                 this.players[0].health -= damage;

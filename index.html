@@ -21,7 +21,7 @@
         </section>
 
         <section class="controls">
-            <template v-if="!isGameStarted">
+            <template v-if="!isGameStarted || finalResult">
                 <a @click="startGame" class="btn start">Start game</a>
             </template>
             <template v-else>
@@ -33,6 +33,16 @@
         </section>
 
         <section class="history">
+            <template v-if="finalResult">
+                <section class="result">
+                    <template v-if="finalResult === 'win'">
+                        You win, you're amazing!
+                    </template>
+                    <template v-else>
+                        You lose, that's a shame :c
+                    </template>
+                </section>
+            </template>
             <template v-for="item in history">
                 <div :class="['historyItem', { you: item.player === 'you', monster: item.target === 'you' }]">
                     {{ item.player }} hits {{ item.target }} for {{ item.damage }}
