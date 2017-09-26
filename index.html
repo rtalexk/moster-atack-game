@@ -14,7 +14,7 @@
             <section v-for="player in players" :key="player.id" class="player">
                 <h1 class="name">{{ player.name }}</h1>
                 <div class="health">
-                    <div class="currentHealth"></div>
+                    <div class="currentHealth" :style="{ width: player.health + '%' }"></div>
                     <span class="healthCounter">{{ player.health }}</span>
                 </div>
             </section>
@@ -22,13 +22,13 @@
 
         <section class="controls">
             <template v-if="!isGameStarted">
-                <a class="btn">Start game</a>
+                <a @click="startGame" class="btn start">Start game</a>
             </template>
             <template v-else>
-                <a class="btn atack">Atack</a>
-                <a class="btn special">Special</a>
-                <a class="btn health">Heal</a>
-                <a class="btn giveup">Give Up</a>
+                <a @click="doAction('atack')" class="btn atack">Atack</a>
+                <a @click="doAction('special')" class="btn special">Special</a>
+                <a @click="doAction('heal')" class="btn health">Heal</a>
+                <a @click="giveUp" class="btn giveup">Give Up</a>
             </template>
         </section>
 
