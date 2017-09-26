@@ -52,41 +52,35 @@ new Vue({
         },
         randomEnemyAction: function () {
             const random = Math.random();
-            if (random < 0.20) { return 'heal'; } 
+            if (random < 0.20) { return 'heal'; }
             if (random < 0.80) { return 'atack'; }
             return 'special';
         },
-        doAction: function (action) {
-            let amount;
+        action: function (sourceIndex, targetIndex, action) {
+            const amount = action === 'heal'
+                ? this.heal() * -1
+                : action === 'atack'
+                    ? this.atack()
+                    : this.special();
 
-            let historyItem;
+            const index = action === 'heal' ? sourceIndex : targetIndex;
+            this.players[index].health -= amount;
 
-            if (action === 'heal') {
-                amount = this.heal();
-                this.players[0].health += amount;
-                if (this.players[0].health > 100) {
-                    this.players[0].health = 100;
-                }
-            } else {
-                amount = action === 'atack' ? this.atack() : this.special();
-                this.players[1].health -= amount;
+            if (action === 'heal' && this.players[sourceIndex].health > 100) {
+                this.players[sourceIndex].health = 100;
             }
-            historyItem = this.buildHistoryItem(action, amount, 'you', 'monster')
+
+            return Math.abs(amount);
+        },
+        doAction: function (action) {
+            let amount = this.action(0, 1, action);
+            let historyItem = this.buildHistoryItem(action, amount, 'you', 'monster')
             this.history.splice(0, 0, historyItem);
 
             const enemyAction = this.randomEnemyAction();
 
-            if (enemyAction === 'heal') {
-                amount = this.heal();
-                this.players[1].health += amount;
-                if (this.players[1].health > 100) {
-                    this.players[1].health = 100;
-                }
-            } else {
-                amount = enemyAction === 'atack' ? this.atack() : this.special();
-                this.players[0].health -= amount;
-            }
-            historyItem = this.buildHistoryItem('atack', amount, 'monster', 'you')
+            amount = this.action(1, 0, enemyAction);
+            historyItem = this.buildHistoryItem(enemyAction, amount, 'monster', 'you')
             this.history.splice(0, 0, historyItem);
         }
 
